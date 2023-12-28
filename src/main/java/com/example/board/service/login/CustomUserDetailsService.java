@@ -1,10 +1,10 @@
 package com.example.board.service.login;
 
-import io.security.springsecurityoauth2.converters.ProviderUserRequest;
-import io.security.springsecurityoauth2.model.PrincipalUser;
-import io.security.springsecurityoauth2.model.ProviderUser;
-import io.security.springsecurityoauth2.model.user.User;
-import io.security.springsecurityoauth2.repository.UserRepository;
+import com.example.board.converters.ProviderUserRequest;
+import com.example.board.entity.User;
+import com.example.board.model.PrincipalUser;
+import com.example.board.model.ProviderUser;
+import com.example.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,23 +12,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailService extends AbstractOAuth2UserService implements UserDetailsService {
+public class CustomUserDetailsService extends AbstractOAuth2UserService implements UserDetailsService {
     private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
 
-        if(user == null){
-            user = User.builder()
-                    .id("1")
-                    .username("onjsdnjs")
-                    .password("{noop}1234")
-                    .authorities(AuthorityUtils.createAuthorityList("ROLE_USER"))
-                    .email("onjsdnjs@gmail.com")
-                    .build();
-        }
+        User user = userRepository.findByUniqueId(username)
+                .orElseThrow(()-> new NullPointerException("loadUserByUsername : "+"해당 유저를 찾지 못했습니다."));
 
         ProviderUserRequest providerUserRequest = new ProviderUserRequest(user);
         ProviderUser providerUser = providerUser(providerUserRequest);
@@ -38,3 +33,4 @@ public class CustomUserDetailService extends AbstractOAuth2UserService implement
         return new PrincipalUser(providerUser);
     }
 }
+

@@ -1,16 +1,19 @@
 package com.example.board.service.login;
 
-import io.security.springsecurityoauth2.certification.SelfCertification;
-import io.security.springsecurityoauth2.converters.ProviderUserConverter;
-import io.security.springsecurityoauth2.converters.ProviderUserRequest;
-import io.security.springsecurityoauth2.model.*;
-import io.security.springsecurityoauth2.model.user.User;
-import io.security.springsecurityoauth2.repository.UserRepository;
+import com.example.board.certification.SelfCertification;
+import com.example.board.converters.ProviderUserConverter;
+import com.example.board.converters.ProviderUserRequest;
+import com.example.board.entity.User;
+import com.example.board.model.ProviderUser;
+import com.example.board.repository.UserRepository;
+import com.example.board.service.UserService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Getter
@@ -30,12 +33,16 @@ public abstract class AbstractOAuth2UserService {
         certification.checkCertification(providerUser);
     }
     public void register(ProviderUser providerUser, OAuth2UserRequest userRequest){
-        User user = userRepository.findByUsername(providerUser.getUsername());
 
-        if(user == null){
+        String uniqueId = providerUser.getEmail()+providerUser.getProvider();
+        //todo : 유저 찾는 방식 수정필요
+        Optional<User> user = userRepository.findByUniqueId(uniqueId);
+
+        if(user.isEmpty()){
             ClientRegistration clientRegistration = userRequest.getClientRegistration();
             userService.register(clientRegistration.getRegistrationId(),providerUser);
         }else{
+            System.out.println("이미 회원가입 되어있습니다.");
             System.out.println("userRequest = " + userRequest);
         }
     }

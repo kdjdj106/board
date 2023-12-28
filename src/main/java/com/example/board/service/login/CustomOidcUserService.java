@@ -1,8 +1,8 @@
 package com.example.board.service.login;
 
-import io.security.springsecurityoauth2.converters.ProviderUserRequest;
-import io.security.springsecurityoauth2.model.PrincipalUser;
-import io.security.springsecurityoauth2.model.ProviderUser;
+import com.example.board.converters.ProviderUserRequest;
+import com.example.board.model.PrincipalUser;
+import com.example.board.model.ProviderUser;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;

@@ -3,6 +3,8 @@ package com.example.board.converters;
 
 import com.example.board.entity.User;
 import com.example.board.model.ProviderUser;
+import com.example.board.type.UserRole;
+import com.nimbusds.oauth2.sdk.Role;
 
 public final class UserDetailsProviderUserConverter implements ProviderUserConverter<ProviderUserRequest,ProviderUser> {
 
@@ -14,13 +16,15 @@ public final class UserDetailsProviderUserConverter implements ProviderUserConve
             }
 
             User user = providerUserRequest.user();
-            return User.builder()
-                    .id(user.getId())
-                    .username(user.getUsername())
+             User.builder()
+                    .uniqueId(user.getUniqueId())
                     .password(user.getPassword())
-                    .authorities(user.getAuthorities())
+                    .userRole(user.getUserRole())
+//                    .authorities(user.getAuthorities())
                     .email(user.getEmail())
-                    .provider("none")
+                    .provider("FORM")
                     .build();
+
+        return user;
         }
     }

@@ -32,4 +32,9 @@ public class KakaoUser extends OAuth2ProviderUser {
         return (String) otherAttributes.get("profile_image_url");
     }
 
+    @Override
+    public String getUniqueId() {
+        return null;
+    }
+
 }

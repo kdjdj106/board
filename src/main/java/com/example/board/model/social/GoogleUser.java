@@ -24,4 +24,9 @@ public class GoogleUser extends OAuth2ProviderUser {
     public String getPicture() {
         return null;
     }
+
+    @Override
+    public String getUniqueId() {
+        return null;
+    }
 }
